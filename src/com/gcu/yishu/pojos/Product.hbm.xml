@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.softxx.pojos">
+    <class name="Product" table="T_PRODUCT">
+        <id name="pro_Num" type="java.lang.Integer">
+            <column name="PRO_NUM" />
+            <generator class="native" />
+        </id>
+        <property name="pro_Name" type="java.lang.String">
+            <column name="PRO_NAME" not-null="true" length="255"/>
+        </property>
+        <property name="pro_Author" type="java.lang.String">
+            <column name="PRO_AUTHOR" length="255"/>
+        </property>
+        <property name="pro_Press" type="java.lang.String">
+            <column name="PRO_PRESS" length="255"/>
+        </property>
+        <property name="pro_Type" type="java.lang.Integer">
+            <column name="PRO_TYPE" not-null="true" default="0" length="5"/>
+        </property>
+        <property name="pro_PubishTime" type="java.util.Date">
+            <column name="PRO_PUBLISHTIME" not-null="true"></column>
+        </property>
+        <many-to-one name="user" class="User" fetch="join">
+            <column name="BELONG_WHO" />
+        </many-to-one>
+        <one-to-one name="product_Style" class="Product_Style" property-ref="product"/>
+       <!--<one-to-one name="order" class="Order" property-ref="product"></one-to-one>  --> 
+    </class>
+</hibernate-mapping>

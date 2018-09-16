@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.softxx.pojos">
+    <class name="Order" table="T_ORDER">
+        <id name="OrderId" type="java.lang.Integer">
+            <column name="ORDERID" />
+            <generator class="native" />
+        </id>
+        <property name="Create_time" type="java.util.Date">
+            <column name="CREATE_TIME" not-null="true"/>
+        </property>
+        
+         <!-- 状态0为在线支付 状态1为线下支付  -->
+        <property name="IsitOnline" type="integer">
+          <column name="ISIT_ONLINE" default="0" length="2" not-null="true" />
+        </property>
+        
+        <!-- 状态0为为支付 状态1为已经支付   -->
+        <property name="IsitPay" type="integer">
+           <column name="ISIT_PAY" default="0" length="2" not-null="true" />
+        </property>
+        
+        <!-- 状态0为未到达  状态1为已经到达 默认未到达   -->
+        <property name="Isitarrive" type="integer">
+           <column name="ISIT_ARRIVE" default="0" length="2" not-null="true" />
+        </property>
+        
+        <!-- 多对一映射订单所属用户  -->
+        <many-to-one name="user" class="User">
+            <column name="ORDER_BELONG_WHO"/>
+        </many-to-one>
+        
+        <!-- 一对一映射订单中的产品  -->
+        <many-to-one name="product" class="Product" >
+            <column name="Have_Product" unique="true"/>
+        </many-to-one>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,115 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx.xsd">
+	
+	<context:component-scan base-package="com.gcu.yishu.util"></context:component-scan>
+	<!-- 自动识别注解  -->
+	<context:annotation-config/>
+	
+	<!-- 加载属性文件  -->
+	<bean id="propertyConfigurer" 
+	      class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	      <property name="locations">
+	        <list>
+	          <value>classpath:DBLog.properties</value>
+	        </list>
+	      </property>      
+    </bean>
+    
+    <!-- 在核心配置文件中加载数据库文件
+	<context:property-placeholder location="classpath:resource/DBLog.properties" />
+	 -->
+	 
+	<!-- 配置数据源  -->
+	<bean id="c3p0_dataSource" 
+	      class="com.mchange.v2.c3p0.ComboPooledDataSource"
+	      destroy-method="close">
+	      <!-- 配置连接参数 -->
+	      <property name="driverClass" value="${driverClassName}"/>      
+	      <property name="jdbcUrl" value="${url}"/>
+	      <property name="user" value="${username}"/>
+	      <property name="password" value="${password}"/>  
+	      <!-- 当数据库关闭时，默认未提交的业务全部回滚 -->
+	      <property name="autoCommitOnClose" value="${autoCommitOnClose}"/>
+	      <!-- 连接池保留的最小连接数  -->
+	      <property name="minPoolSize" value="${minPoolSize}"/>
+	      <!-- 连接池保留的最大连接数  -->
+	      <property name="maxPoolSize" value="${maxPoolSize}"/>
+	      <!-- 初始化时获取的连接数  -->
+	      <property name="initialPoolSize" value="${initialPoolSize}"/>
+	      <!-- 最大空闲时间  -->
+	      <property name="maxIdleTime" value="${maxIdleTime}"/>
+	      <!-- 当连接池用完时，默认连接池一次创建新连接的数目 -->
+	      <property name="acquireIncrement" value="${acquireIncrement}"/>
+	      <!-- 连接失败后尝试重新获取连接的次数  -->
+	      <property name="acquireRetryAttempts" value="${acquireRetryAttempts}"/>
+	      <!-- 连接池用完时的等待连接时间  -->
+	      <property name="checkoutTimeout" value="${checkoutTimeout}"/>    
+	</bean>
+	
+	<!-- 配置session工厂  -->
+	<bean id="sessionFactory" 
+	      class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+	      <!-- 数据库连接池 -->
+	      <property name="dataSource" ref="c3p0_dataSource"/>  <!-- 数据源 -->
+	      <property name="hibernateProperties">
+	         <props>
+	           <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
+	           <prop key="hibernate.hbm2ddl.auto">update</prop>
+	           <prop key="hibernate.show_sql">true</prop>              <!-- 后台是否显示数据库语句 -->
+	           <prop key="hibernate.format_sql">true</prop>    <!-- 根据映射文件更新表结构 -->
+	         </props>   
+	      </property>    
+	      <!-- 配置映射资源文件  -->
+	   	  <property name="mappingResources">
+	        <list>
+	          <value>com/gcu/yishu/pojos/User.hbm.xml</value>
+	          <value>com/gcu/yishu/pojos/Product_Style.hbm.xml</value>
+	          <value>com/gcu/yishu/pojos/Product.hbm.xml</value>
+	          <value>com/gcu/yishu/pojos/Order.hbm.xml</value>
+	        </list>
+	      </property>    
+	</bean>
+	
+	<!-- 配置事务管理  -->
+	<bean id="txManager" 
+	      class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+	      <property name="sessionFactory" ref="sessionFactory"/>      
+	</bean>
+	<!-- 配置事务通知（切面）  -->
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+	   <tx:attributes>
+	      <tx:method name="get*"   />
+	      <tx:method name="query"    />
+	      <tx:method name="find*"    />
+	      <tx:method name="login*"   />
+	      <tx:method name="search*"  />
+	      
+	      <tx:method name="save*" rollback-for="Exception" propagation="REQUIRED"/>
+	      <tx:method name="add*" propagation="REQUIRED"/>
+	      <tx:method name="delete*" propagation="REQUIRED"/>
+	      <tx:method name="update*" propagation="REQUIRED"/>
+	      <tx:method name="do*" propagation="REQUIRED"/>
+	     <!-- 如果当前没有事务，就新建一个事务，如果已经存在一个事务中，加入到这个事务中。这是最常见的选择。 --> 
+	   </tx:attributes>
+	</tx:advice>
+	
+	<bean id="hibernateUtils" class="com.gcu.yishu.util.HibernateUtils">
+	   <property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+
+    <bean id="pagingUtils" class="com.gcu.yishu.util.PagingUtil">
+	   <property name="hibernateUtils" ref="hibernateUtils"></property>
+	</bean>
+</beans>

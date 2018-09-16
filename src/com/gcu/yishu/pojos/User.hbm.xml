@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.softxx.pojos">
+    <class name="User" table="T_USER">
+        <id name="Id" type="java.lang.Integer">
+            <column name="ID" />
+            <generator class="native" />
+        </id>
+        <property name="stu_No" type="java.lang.String">
+            <column name="STU_NO" length="15" not-null="true"/>
+        </property>
+        <property name="Grade" type="string">
+             <column name="GRADE" length="10" not-null="true"/>
+        </property>
+        <property name="Major" type="string">
+             <column name="MAJOR" length="50"></column>
+        </property>
+        <property name="SuccessNum" type="integer">
+             <column name="SUCCESS_NUM" default="0"/>
+        </property>
+        <property name="MobilePhone" type="string">
+             <column name="MOBILE_PHONE" length="20" not-null="true"/>
+        </property>
+        <property name="TrueName" type="string">
+             <column name="TRUE_NAME" not-null="true" length="50"/>
+        </property>
+        <!-- 一对多 与产品映射  -->
+        <set name="products" table="T_PRODUCT" inverse="true" lazy="true" order-by="pro_Num asc">
+            <key column="BELONG_WHO" />
+            <one-to-many class="Product" />
+        </set>
+        <set name="Orders" table="T_ORDER" inverse="true" lazy="true" order-by="OrderId asc">
+            <key>
+                <column name="ORDER_BELONG_WHO" />
+            </key>
+            <one-to-many class="Order" />
+        </set>  
+    </class>
+</hibernate-mapping>
