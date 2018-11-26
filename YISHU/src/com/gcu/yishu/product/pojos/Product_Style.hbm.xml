@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.gcu.yishu.product.pojos">
+    <class name="Product_Style" table="T_PRODUCT_STYLE">
+        <id name="styleId" type="java.lang.Integer">
+            <column name="STYLEID" />
+            <generator class="native" />
+        </id>
+        <property name="Pic1" type="java.lang.String">
+            <column name="PRODUCT_PIC1" not-null="true"/>
+        </property>
+        <!--  
+        <property name="Pic2" type="java.lang.String">
+            <column name="PRODUCT_PIC2" not-null="true"/>
+        </property>
+        <property name="Pic3" type="java.lang.String">
+            <column name="PRODUCT_PIC3" not-null="true"/>
+        </property>
+                <property name="Pic4" type="java.lang.String">
+            <column name="PRODUCT_PIC4"/>
+        </property>
+        <property name="Pic5" type="java.lang.String">
+            <column name="PRODUCT_PIC5"/>
+        </property>
+        
+        <property name="Pro_Remark" type="java.lang.String">
+            <column name="PRO_REMARK" not-null="true" length="255"/>
+        </property>
+        -->
+        <!-- 一对一映射所属的产品  -->
+        <many-to-one name="product" class="Product">
+            <column name="BELONG_WHICH_PRO" unique="true"></column>
+        </many-to-one>
+    </class>
+</hibernate-mapping>

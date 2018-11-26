@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.gcu.yishu.user.pojos">
+
+	<class name="User" table="T_USER">
+		<!-- 用户序号 -->
+		<id name="ID" column="ID" type="integer">
+			<generator class="native"/>
+		</id>
+		<!-- 学号 -->
+		<property name="SNO" column="SNO" type="string" not-null="true"/>
+		<!-- 真实姓名 -->
+		<property name="UserName" column="USERNAME" type="string" not-null="true"/>
+		<!-- 密码 -->
+		<property name="Password" column="PASSWORD" type="string" not-null="true"/>
+		<!-- 年级 -->
+		<property name="Grade" column="GRADE" type="string" not-null="false"/>
+		<!-- 专业 -->
+		<property name="Major" column="MAJOR" type="string" not-null="false"/>
+		<!-- 手机号码 -->
+		<property name="MobilePhone" column="MOBILEPHONE" type="string" not-null="true"/>
+		<!-- 完成订单数 -->
+		<property name="SuccessOrderNum" column="SUCCESSORDERNUM" type="integer" not-null="false"/>
+		
+		<!-- 头像 -->
+		<!-- <property name="HeadImg" column="HEADIMG" type="File" not-null="false"/>-->
+		<property name="HeadImgPath" column="HeadImgPath" type="string" not-null="false"/>
+		
+		<!-- one-to-many -->
+		<set name="Orders" table="T_ORDER" cascade="all" inverse="true" lazy="true" order-by="OrderId asc">
+            <key column="USER_ID"/>
+            <one-to-many class="com.gcu.yishu.order.pojos.Order" />
+        </set> 
+	</class>
+
+</hibernate-mapping>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.gcu.yishu.order.pojos">
+    <class name="OrderItem" table="T_ORDERITEM">
+    	<!-- 订单项编号 -->
+        <id name="orderItemID" column="ORDERITEM_ID" type="integer">
+            <generator class="native" />
+        </id>
+    	<!-- 商品数量-->
+    	<property name="count" column="COUNT" type="int" not-null="true"/>
+    	<!-- 商品总金额 -->
+    	<property name="sum" column="SUM" type="double" not-null="true"/>
+    	<!-- 与Order表关联N-1 -->
+    	<many-to-one name="orderID" column="ORDER_ID" class="com.gcu.yishu.order.pojos.Order"/>
+    	<!-- 与Product表关联N-1 -->
+  		<many-to-one name="productID" lazy="false" column="PRODUCT_ID" class="com.gcu.yishu.product.pojos.Product"/>
+    </class>
+</hibernate-mapping>

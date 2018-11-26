@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx.xsd">
+	
+	<!-- 自动识别注解  -->
+	<context:annotation-config/>
+	
+	<!-- 加载属性文件  -->
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	      <property name="locations">
+	        <list>
+	          <value>classpath:DB.properties</value>
+	        </list>
+	      </property>      
+    </bean>
+	
+	<!-- 配置数据源  -->
+	<bean id="c3p0_dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+	      <!-- 驱动 -->
+	      <property name="driverClass" value="${driverClassName}"/>      
+	      <!-- 路径 -->
+	      <property name="jdbcUrl" value="${url}?useUnicode=true&amp;characterEncoding=UTF-8"/>
+	      <!-- 用户名 -->
+	      <property name="user" value="${username}"/>
+	      <!-- 密码 -->
+	      <property name="password" value="${password}"/>  
+	      <!-- 当数据库关闭时，默认未提交的业务全部回滚 -->
+	      <property name="autoCommitOnClose" value="${autoCommitOnClose}"/>
+	      <!-- 连接池保留的最小连接数  -->
+	      <property name="minPoolSize" value="${minPoolSize}"/>
+	      <!-- 连接池保留的最大连接数  -->
+	      <property name="maxPoolSize" value="${maxPoolSize}"/>
+	      <!-- 初始化时获取的连接数  -->
+	      <property name="initialPoolSize" value="${initialPoolSize}"/>
+	      <!-- 最大空闲时间  -->
+	      <property name="maxIdleTime" value="${maxIdleTime}"/>
+	      <!-- 当连接池用完时，默认连接池一次创建新连接的数目 -->
+	      <property name="acquireIncrement" value="${acquireIncrement}"/>
+	      <!-- 连接失败后尝试重新获取连接的次数  -->
+	      <property name="acquireRetryAttempts" value="${acquireRetryAttempts}"/>
+	      <!-- 连接池用完时的等待连接时间  -->
+	      <property name="checkoutTimeout" value="${checkoutTimeout}"/>    
+	</bean>
+	
+	<!-- 配置sessionFactory -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+	      <property name="dataSource" ref="c3p0_dataSource"/>  
+	      <property name="hibernateProperties">
+	         <props>
+	           <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
+	           <prop key="hibernate.hbm2ddl.auto">update</prop>
+	           <prop key="hibernate.show_sql">true</prop>
+	           <prop key="hibernate.format_sql">true</prop>
+	         </props>   
+	      </property>    
+	      <!-- 配置映射资源文件  -->
+	   	  <property name="mappingResources">
+	        <list>
+	          <value>/com/gcu/yishu/user/pojos/User.hbm.xml</value>
+	          <value>/com/gcu/yishu/order/pojos/Order.hbm.xml</value>
+	          <value>/com/gcu/yishu/order/pojos/OrderItem.hbm.xml</value>
+	      
+	          <value>com/gcu/yishu/product/pojos/Product_Style.hbm.xml</value>
+	          <value>com/gcu/yishu/product/pojos/Product.hbm.xml</value>
+	          
+	        </list>
+	      </property>    
+	</bean>
+	
+	<!-- 配置事务管理  -->
+	<bean id="txManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+	      <property name="sessionFactory" ref="sessionFactory"/>      
+	</bean>
+	
+	<!-- 配置事务通知（切面）  -->
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+	   <tx:attributes>
+	      <tx:method name="get*" read-only="false"/>
+	      <tx:method name="query" read-only="true"/>
+	      <tx:method name="find*" read-only="true"/>
+	      <tx:method name="login*" read-only="true"/>
+	      <tx:method name="search*" read-only="true"/>
+	      <tx:method name="*_add" propagation="REQUIRED"/>
+	      <tx:method name="delete*" propagation="REQUIRED"/>
+	      <tx:method name="update*" propagation="REQUIRED"/>
+	      <tx:method name="do*" propagation="REQUIRED"/>
+	   </tx:attributes>
+	</tx:advice>
+	
+	<!-- 配置ActionImpl bean-->
+		<bean id="userAction" class="com.gcu.yishu.user.action.UserActionImpl" scope="prototype">
+			<property name="userService" ref="userService"/>
+			<property name="orderAction" ref="orderAction"/>
+		</bean>
+		<bean id="orderAction" class="com.gcu.yishu.order.action.OrderActionImpl" scope="prototype">
+			<property name="orderService" ref="orderService"/>
+		</bean>
+		
+		<bean id="productAction" class ="com.gcu.yishu.product.action.ProductAction" scope="prototype">
+	      <property name="productService" ref="productService"/>
+	      <property name="orderAction" ref="orderAction"/>
+		</bean>
+		<bean id="cartAction" class="com.gcu.yishu.cart.action.CartActionImpl" scope="prototype">
+			<property name="orderAction" ref="orderAction"/>
+		</bean>
+		
+	<!-- 配置ServiceImpl bean-->
+		<bean id="userService" class="com.gcu.yishu.user.service.UserServiceImpl">
+			<property name="userDao" ref="userDao"/>
+		</bean>
+		<bean id="orderService" class="com.gcu.yishu.order.service.OrderServiceImpl">
+			<property name="orderDao" ref="orderDao"/>
+		</bean>
+		
+		<bean id="productService" class="com.gcu.yishu.product.service.impl.ProductServiceImpl">
+	        <property name="productDao" ref="productDao"/>
+<!-- 	        <property name="PagingUtil" ref="PagingUtil"/> -->
+		</bean>
+		
+	<!-- 配置DaoImpl bean-->
+		<bean id="userDao" class="com.gcu.yishu.user.dao.UserDaoImpl">
+			<property name="sessionFactory" ref="sessionFactory"/>
+		</bean>
+		<bean id="orderDao" class="com.gcu.yishu.order.dao.OrderDaoImpl">
+			<property name="sessionFactory" ref="sessionFactory"/>
+		</bean>
+		
+		<bean id="productDao" class="com.gcu.yishu.product.dao.impl.ProductDaoImpl">
+	     <property name="sessionFactory" ref="sessionFactory"></property>
+		</bean>
+	
+	
+</beans>

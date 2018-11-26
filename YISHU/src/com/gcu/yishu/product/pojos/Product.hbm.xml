@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.gcu.yishu.product.pojos">
+<!-- 标识一个类的xml映射,name为类名,table为表名 -->
+    <class name="Product" table="T_PRODUCT">
+        <!-- 设置主键 -->
+        <!-- 产品编号 -->
+        <id name="Pro_id" type="java.lang.Integer">
+            <column name="PRO_ID" />
+            <generator class="native" />
+        </id>
+        <!-- 商品名字 -->
+        <property name="Pro_name" type="java.lang.String">
+            <column name="PRO_NAME" not-null="true" length="255"/>
+        </property>
+        <!-- 出版作者 -->
+        <property name="Pro_author" type="java.lang.String">
+            <column name="PRO_AUTHOR" length="255"/>
+        </property>
+        <!-- 商品数量 -->
+        <property name="Pro_num" type="integer">
+        	<column name="PRO_NUM" not-null="true"></column>
+        </property>
+        <!-- 售价 -->
+        <property name="Pro_price" type="double">
+            <column name="PRO_PRICE" length="255"/>
+        </property>
+        <!-- 出版社 -->
+        <property name="Pro_press" type="java.lang.String">
+            <column name="PRO_PRESS" length="255"/>
+        </property>
+        <!-- 上架时间 -->
+        <property name="Pro_pubishTime" type="java.lang.String">
+            <column name="PRO_PUBLISHTIME" not-null="true" length="20"></column>
+        </property>
+         <!-- 商品isbn -->
+        <property name="Pro_isbn" type="java.lang.String">
+            <column name="PRO_ISBN" ></column>
+        </property>  
+        <!-- 商品版本 -->
+        <property name="Pro_version" type="java.lang.String">
+            <column name="PRO_VERSION" ></column>
+        </property>          
+        <!-- 封面路径 -->
+        <property name="pic_path" type="java.lang.String">
+            <column name="PIC_PATH" not-null="true"></column>
+        </property> 
+         <!-- 专业类 -->
+        <property name="major" type="java.lang.String">
+            <column name="Major"></column>
+        </property>         
+        <!--多对一        外键用户id-->
+         <many-to-one name="User" class="com.gcu.yishu.user.pojos.User" fetch="join"> 
+             <column name="BELONG_WHO" /> 
+         </many-to-one>  
+        <!-- 一对一         与图样|介绍-->
+        <one-to-one name="product_Style" class="Product_Style" property-ref="product"/>
+        <!-- 与订单项OrderItem 1-N -->
+        <set name="orderItems" table="T_ORDERITEM" cascade="all" inverse="true" lazy="false">
+        	<key column="PRODUCT_ID"/>
+        	<one-to-many class="com.gcu.yishu.order.pojos.OrderItem"/>
+        </set>
+    </class>
+</hibernate-mapping>

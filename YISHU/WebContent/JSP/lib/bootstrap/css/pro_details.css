@@ -1,0 +1,38 @@
+.breadcrumb_backg{
+    background: none;
+}
+.row_bottom{
+    margin-bottom: 10px;
+}
+.row_side{
+    margin-left: 5px;
+    margin-right: 5px;
+}
+.pro_title{
+    font-weight:bolder;
+}
+.pro_img{
+    width: 100%;
+    height: 80%;
+}
+.pro_press{
+    font-size:15px;
+    color: black;
+}
+.pro_price{
+    color: orangered;
+    font-size: 20px;
+    font-weight: bold;
+}
+.pro_collected{
+    color: lightgray;
+    font-size: 12px;
+}
+.row .card a{
+    text-decoration: none;
+    color: black;
+}
+.row .card a:hover{
+    color: black;
+    text-decoration: underline;
+}

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+	"http://struts.apache.org/dtds/struts-2.5.dtd">
+<struts>
+
+	<!-- 商品部分 -->
+	<package name="com.gcu.yishu.action" extends="struts-default">
+		<!-- 1声明拦截器 -->
+		<interceptors>
+			<interceptor name="loginintercept"
+				class="com.gcu.yishu.interceptor.LoginInterceptor"></interceptor>
+		</interceptors>
+		<global-allowed-methods>regex:.*</global-allowed-methods>
+
+		<action name="Product_*" class="productAction" method="{1}">
+			<!-- 2使用拦截器 -->
+			<interceptor-ref name="loginintercept">
+				<!-- 配置action中的某些方法不被拦截 -->
+				<!-- name默认为excludeMethods -->
+				<!-- homePage和login方法不被拦截 -->
+				<param name="excludeMethods">search,major,homePage,login,detail,allProduct</param>
+			</interceptor-ref>
+
+			<!-- 3把其他默认拦截器手动启动一次 -->
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+
+			<!-- 转到新增页面 -->
+			<result name="addUI">/JSP/addUI.jsp</result>
+
+			<result name="Login" type="redirectAction">
+				<param name="actionName">Product_login</param>
+			</result>
+			<result name="toHome" type="redirectAction">
+				<param name="actionName">Product_homePage</param>
+			</result>
+
+			<result name="main">/JSP/main.jsp</result>
+			<!-- 跳到指定的页面 -->
+			<result name="{1}">/JSP/{1}.jsp</result>
+
+			<result name="allProduct">/JSP/allProduct.jsp</result>
+			<!--struts2.3版本之后，使用通配符调用方法时，内部会验证是否允许访问该方法 -->
+			<allowed-methods>allProduct,login,add,edit,editUI,addUI,listUI,listPage,homePage,detail,major,search</allowed-methods>
+		</action>
+	</package>
+
+	<!-- 用户部分 -->
+	<package name="com.gcu.yishu.user.action" extends="struts-default">
+
+		<global-allowed-methods>regex:.*</global-allowed-methods>
+
+		<action name="User_*" class="userAction" method="{1}">
+			<result name="success">/JSP/success.jsp</result>
+			<result name="error">/JSP/error.jsp</result>
+			<!-- 我加的 -->
+			<result name="{1}">/JSP/{1}.jsp</result>
+			<result name="toHome" type="redirectAction">
+				<param name="actionName">User_homePage</param>
+			</result>
+			<result name="home">/JSP/index.jsp</result>
+			<result name="toLogin">/JSP/login.jsp</result>
+
+
+			<!--struts2.3版本之后，使用通配符调用方法时，内部会验证是否允许访问该方法 -->
+			<allowed-methods>add,login,update,listUI，toLogin,loginOut</allowed-methods>
+		</action>
+
+	</package>
+
+	<!-- 购物车部分 -->
+	<package name="com.gcu.yishu.cart.action" extends="struts-default">
+		<!-- 1声明拦截器 -->
+		<interceptors>
+			<interceptor name="loginintercept"
+				class="com.gcu.yishu.interceptor.LoginInterceptor"></interceptor>
+		</interceptors>
+		<global-allowed-methods>regex:.*</global-allowed-methods>
+
+		<action name="Cart_*" class="cartAction" method="{1}">
+			<!-- 2使用拦截器 -->
+			<interceptor-ref name="loginintercept">
+				<param name="excludeMethods">turnLogin</param>
+			</interceptor-ref>
+			<!-- 3把其他默认拦截器手动启动一次 -->
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+			<!-- 跳到指定的页面 -->
+			<result name="Login">/JSP/login.jsp</result>
+
+			<result name="addCartSuccess">/JSP/success.jsp</result>
+			<allowed-methods>turnLogin</allowed-methods>
+		</action>
+	</package>
+	<!-- 订单部分 -->
+	<package name="com.gcu.yishu.order.action" extends="struts-default">
+	<global-allowed-methods>regex:.*</global-allowed-methods>
+		<action name="Order_*" class="orderAction" method="{1}">
+			<result name="saveOrder">/JSP/success.jsp</result>
+		</action>
+	</package>
+</struts>

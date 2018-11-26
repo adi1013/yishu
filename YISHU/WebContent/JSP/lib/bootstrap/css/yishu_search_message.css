@@ -1,0 +1,91 @@
+*{
+	padding: 0px;
+	margin:0px;
+	
+}
+a{
+	font-family: '宋体';
+	text-decoration: none;
+}
+a:hover{
+	text-decoration: none;
+}
+body{
+	width: 100%;
+	min-width: 120px;
+	background-color: #f0f0f0;
+}
+#select_main{
+	width: 80%;
+	background-color:#fff;
+	margin-left: 10%;
+	min-width: 900px;	
+}
+.select_criteria #select_criteria_main{
+	margin-left: 10%;
+}
+.select_criteria #select_criteria_main input,.select_criteria #select_criteria_main div{
+	float: left;
+	margin:1em 10px; 
+}
+.select_criteria #select_criteria_main .my_font_control select{
+	width: 300px;
+}
+.select_criteria #select_criteria_main input{
+	width: 100px;
+}
+.select_show_goods{
+	height: 150px;
+}
+.select_goods_lable{
+	width: 90%;
+	border-bottom: 1px #ccc solid;
+	margin-left: 5%;
+	float: left;
+	padding: 20px;
+}
+.select_goods_lable img ,.select_goods_lable_mess ,.select_goods_lable_price ,.select_goods_lable_button{
+	height: 150px;
+	float: left;
+}
+.select_goods_lable table tr td .select_goods_lable_mess{
+	width:460px;
+}
+.select_goods_lable table tr td .select_goods_lable_mess a{
+	margin-top: 0.8em;
+	margin-left: 0.8em;
+	font-family: '黑体';
+	font-size: 2em;
+	width: 550px;
+	line-height: 2em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	
+
+}
+.select_goods_lable table tr td .select_goods_lable_mess .select_goods_lable_seller{
+	font-size: 1.2em;
+	line-height: 2em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	margin-left: 4em;
+}
+.select_goods_lable table tr td .select_goods_lable_price{
+	line-height: 150px;
+	font-size: 2.5em;
+	font-family: Arial;
+	color: #f40;
+	margin-left: 0.4em;
+	margin-right: 0.4em;
+}
+.select_goods_lable table tr td .select_goods_lable_button input{
+	margin: 15px;
+	width:120px;
+}
+.select_main_page_numb{
+	text-align: center;
+	margin-top: 3em;
+	padding-bottom: 3em;
+}

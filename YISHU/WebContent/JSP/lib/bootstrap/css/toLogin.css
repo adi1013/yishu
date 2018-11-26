@@ -1,0 +1,12 @@
+.login_border{
+    background:#CCC;
+    top:0;
+    text-align: bottom;
+}
+.clear_right-radius{
+    border-top-right-radius:0px;
+    border-bottom-right-radius:0px;
+}
+.gly_style{
+    margin-left: 20px;
+}
